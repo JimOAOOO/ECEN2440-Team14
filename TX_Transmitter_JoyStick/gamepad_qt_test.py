@@ -11,7 +11,7 @@ from ir_tx.nec import NEC
 tx_pin = Pin(18,Pin.OUT,value=0)
 device_addr = 0x01
 transmitter = NEC(tx_pin)
-commands = [0x01,0x02,0x03,0x04]  
+commands = [0x01,0x02,0x03,0x04,0x05,0x06]  
 #0x01,0x02,0x03,0x4 is LED on signal, 0x05 is turn off all LED.
 
 
@@ -76,6 +76,7 @@ def handle_button_press(button):
    """Toggle the corresponding LED state on button press."""
    global led_states
    led_states[button] = not led_states[button]
+   
    if button == BUTTON_A:
         transmitter.transmit(device_addr,0x01)
         print("COMMANDS",hex(0x01),"TRANSMITTED.")
@@ -92,6 +93,13 @@ def handle_button_press(button):
         transmitter.transmit(device_addr,0x04)
         print("COMMANDS",hex(0x04),"TRANSMITTED.")
         time.sleep(3)
+   elif button == BUTTON_START:
+        transmitter.transmit(device_addr,0x05)
+        print("COMMANDS",hex(0x05),"TRANSMITTED.")
+   elif button == BUTTON_SELECT:
+        transmitter.transmit(device_addr,0x06)
+        print("COMMANDS",hex(0x06),"TRANSMITTED.")
+
    print("Button", button, "is", "pressed" if led_states[button] else "released")
 
 def main():
@@ -120,9 +128,9 @@ def main():
            print("Joystick moved - X:", current_x, ", Y:", current_y)
            last_x, last_y = current_x, current_y
            # Turn off all LEDs
-           transmitter.transmit(device_addr,0x05)
-           print("COMMANDS",hex(0x05),"TRANSMITTED.")
-           time.sleep(3)
+          #  transmitter.transmit(device_addr,0x05)
+          #  print("COMMANDS",hex(0x05),"TRANSMITTED.")
+          #  time.sleep(3)
 
            # Determine which LED to turn on based on joystick direction
            if current_y < joystick_center_y - joystick_threshold:  # Joystick moved up
