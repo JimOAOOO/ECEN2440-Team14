@@ -16,7 +16,7 @@ p1 = Pin(5, Pin.IN, Pin.PULL_UP)
 p2 = Pin(6, Pin.IN, Pin.PULL_UP)
 p3 = Pin(7, Pin.IN, Pin.PULL_UP)
 IR_t = 0
-RF_int = 1
+RF_int = 0
 IR_int = 0
 
 #####################################################################################
@@ -114,4 +114,7 @@ def motor_right():
 
 # Main loop to keep the script running
 while True:
-    RF_int = 1
+    if IR_int:
+        IR_t = 1
+    else:
+        IR_t = 0
