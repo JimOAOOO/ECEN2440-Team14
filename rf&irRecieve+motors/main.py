@@ -11,12 +11,12 @@ bin1_ph = Pin(14, Pin.OUT) # Initialize GP14 as an OUTPUT
 bin2_en = PWM(15, freq = pwm_rate, duty_u16 = 0)
 pwm = min(max(int(2**16 * abs(1)), 0), 65535)
 #pins for rf reciever pullup
-p18 = Pin(18, Pin.IN, Pin.PULL_UP)
-p19 = Pin(19, Pin.IN, Pin.PULL_UP)
-p20 = Pin(20, Pin.IN, Pin.PULL_UP)
-p21 = Pin(21, Pin.IN, Pin.PULL_UP)
+p0 = Pin(4, Pin.IN, Pin.PULL_UP)
+p1 = Pin(5, Pin.IN, Pin.PULL_UP)
+p2 = Pin(6, Pin.IN, Pin.PULL_UP)
+p3 = Pin(7, Pin.IN, Pin.PULL_UP)
 IR_t = 0
-RF_int = 0
+RF_int = 1
 IR_int = 0
 
 #####################################################################################
@@ -43,44 +43,44 @@ def ir_callback(data, addr, _):
     elif data == 6:
         global IR_int
         global RF_int
-        RF_int = 1
+        RF_int = 0
         IR_int = 0
         print("RF selected")
     
 # Setup the IR receiver
-ir_pin = Pin(17, Pin.IN, Pin.PULL_UP) # Adjust the pin number based on your wiring
+ir_pin = Pin(18, Pin.IN, Pin.PULL_UP) # Adjust the pin number based on your wiring
 ir_receiver = NEC_8(ir_pin, callback=ir_callback)
 # Optional: Use the print_error function for debugging
 ir_receiver.error_function(print_error)
 
 ######################################################################################
 #input 1 callback
-def callback1(p18):
+def callback1(p0):
     if RF_int:
         motor_Forward()
 
-p18.irq(trigger=Pin.IRQ_RISING, handler=callback1)
+p0.irq(trigger=Pin.IRQ_RISING, handler=callback1)
 
 #input 2 callback
-def callback2(p19):
+def callback2(p1):
     if RF_int:
         motor_Reverse()
 
-p19.irq(trigger=Pin.IRQ_RISING, handler=callback2)
+p1.irq(trigger=Pin.IRQ_RISING, handler=callback2)
 
 #input 3 callback
-def callback3(p20):
+def callback3(p2):
     if RF_int:
         motor_Left()
 
-p20.irq(trigger=Pin.IRQ_RISING, handler=callback3)
+p2.irq(trigger=Pin.IRQ_RISING, handler=callback3)
 
 #input 4 callback
-def callback4(p21):
+def callback4(p3):
     if RF_int:
         motor_right()
 
-p21.irq(trigger=Pin.IRQ_RISING, handler=callback4)
+p3.irq(trigger=Pin.IRQ_RISING, handler=callback4)
 
 # Motor control (0x1, 0x2, 0x3, 0x4)
 def motor_Forward():
@@ -114,7 +114,4 @@ def motor_right():
 
 # Main loop to keep the script running
 while True:
-    if IR_int:
-        IR_t = 1
-    else:
-        IR_t = 0
+    RF_int = 1
