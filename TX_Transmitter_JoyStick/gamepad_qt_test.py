@@ -38,10 +38,6 @@ BUTTONS_MASK = (1 << BUTTON_X) | (1 << BUTTON_Y) | \
               (1 << BUTTON_SELECT) | (1 << BUTTON_START)
 
 # Define LED pins
-LED_1_PIN = 12
-LED_2_PIN = 13
-LED_3_PIN = 15
-LED_4_PIN = 14
 
 # Initialize LED states
 led_states = {
@@ -79,26 +75,28 @@ def handle_button_press(button):
    
    if button == BUTTON_A:
         transmitter.transmit(device_addr,0x01)
-        print("COMMANDS",hex(0x01),"TRANSMITTED.")
-        time.sleep(3)
+        print("COMMANDS",hex(0x01),"TRANSMITTED")
+        time.sleep(0.1)
    elif button == BUTTON_B:
         transmitter.transmit(device_addr,0x02)
         print("COMMANDS",hex(0x02),"TRANSMITTED.")
-        time.sleep(3)
+        time.sleep(0.1)
    elif button == BUTTON_X:
         transmitter.transmit(device_addr,0x03)
         print("COMMANDS",hex(0x03),"TRANSMITTED.")
-        time.sleep(3)
+        time.sleep(0.1)
    elif button == BUTTON_Y:
         transmitter.transmit(device_addr,0x04)
         print("COMMANDS",hex(0x04),"TRANSMITTED.")
-        time.sleep(3)
+        time.sleep(0.1)
    elif button == BUTTON_START:
         transmitter.transmit(device_addr,0x05)
         print("COMMANDS",hex(0x05),"TRANSMITTED.")
+        time.sleep(0.1)
    elif button == BUTTON_SELECT:
         transmitter.transmit(device_addr,0x06)
         print("COMMANDS",hex(0x06),"TRANSMITTED.")
+        time.sleep(0.1)
 
    print("Button", button, "is", "pressed" if led_states[button] else "released")
 
@@ -134,21 +132,21 @@ def main():
 
            # Determine which LED to turn on based on joystick direction
            if current_y < joystick_center_y - joystick_threshold:  # Joystick moved up
-                transmitter.transmit(device_addr,0x01)
-                print("COMMANDS",hex(0x01),"TRANSMITTED.")
-                time.sleep(3)
+                transmitter.transmit(device_addr,0x03)
+                print("COMMANDS",hex(0x03),"moved up.")
+                time.sleep(0.1)
            elif current_y > joystick_center_y + joystick_threshold:  # Joystick moved down
                 transmitter.transmit(device_addr,0x02)
-                print("COMMANDS",hex(0x02),"TRANSMITTED.")
-                time.sleep(3)
-           elif current_x < joystick_center_x - joystick_threshold:  # Joystick moved left
-                transmitter.transmit(device_addr,0x03)
-                print("COMMANDS",hex(0x03),"TRANSMITTED.")
-                time.sleep(3)
-           elif current_x > joystick_center_x + joystick_threshold:  # Joystick moved right
+                print("COMMANDS",hex(0x02),"moved down.")
+                time.sleep(0.1)
+           elif current_x > joystick_center_x + joystick_threshold:  # Joystick moved left
                 transmitter.transmit(device_addr,0x04)
-                print("COMMANDS",hex(0x04),"TRANSMITTED.")
-                time.sleep(3)
+                print("COMMANDS",hex(0x04),"moved left.")
+                time.sleep(0.1)
+           elif current_x < joystick_center_x - joystick_threshold:  # Joystick moved right
+                transmitter.transmit(device_addr,0x01)
+                print("COMMANDS",hex(0x01),"moved right.")
+                time.sleep(0.1)
 
        last_buttons = current_buttons
        time.sleep(0.1)  # Delay to prevent overwhelming the output
